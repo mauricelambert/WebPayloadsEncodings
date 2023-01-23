@@ -3,7 +3,7 @@
 
 ###################
 #    This tool encodes Web payloads with some different encoding.
-#    Copyright (C) 2022  Maurice Lambert
+#    Copyright (C) 2022, 2023  Maurice Lambert
 
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU General Public License as published by
@@ -41,6 +41,8 @@ String.fromCharCode(116,104,105,115,32,105,115,32,109,121,32,116,101,115,116)
          &bsol;u{0074}&bsol;u{0068}&bsol;u{0069}&bsol;u{0073}&bsol;u{0020}&bsol;u{0069}&bsol;u{0073}&bsol;u{0020}&bsol;u{006d}&bsol;u{0079}&bsol;u{0020}&bsol;u{0074}&bsol;u{0065}&bsol;u{0073}&bsol;u{0074}
 'hexa escaping', 'hexadecimal escaping', 'hexa_escaping', 'hexadecimal_escaping', 'hexa escape', 'hexa_escape', 'hexadecimal escape', 'hexadecimal_escape'
          \x74\x68\x69\x73\x20\x69\x73\x20\x6d\x79\x20\x74\x65\x73\x74
+'octal escaping', 'octal_escaping', 'octal escape', 'octal_escape'
+         \164\150\151\163\040\151\163\040\155\171\040\164\145\163\164
 'hexadecimal', 'hexa'
          0x74686973206973206d792074657374
 'html', 'html_decimal', 'html decimal'
@@ -70,6 +72,8 @@ String.fromCharCode(116,104,105,115,32,105,115,32,109,121,32,116,101,115,116)
     &bsol;u{0074}&bsol;u{0068}&bsol;u{0069}&bsol;u{0073}&bsol;u{0020}&bsol;u{0069}&bsol;u{0073}&bsol;u{0020}&bsol;u{006d}&bsol;u{0079}&bsol;u{0020}&bsol;u{0074}&bsol;u{0065}&bsol;u{0073}&bsol;u{0074}
 'hexa escaping', 'hexadecimal escaping', 'hexa_escaping', 'hexadecimal_escaping', 'hexa escape', 'hexa_escape', 'hexadecimal escape', 'hexadecimal_escape'
     \x74\x68\x69\x73\x20\x69\x73\x20\x6d\x79\x20\x74\x65\x73\x74
+'octal escaping', 'octal_escaping', 'octal escape', 'octal_escape'
+         \164\150\151\163\040\151\163\040\155\171\040\164\145\163\164
 'hexadecimal', 'hexa'
     0x74686973206973206d792074657374
 'html', 'html_decimal', 'html decimal'
@@ -89,7 +93,7 @@ Tests:
 Test passed.
 """
 
-__version__ = "0.0.1"
+__version__ = "0.0.2"
 __author__ = "Maurice Lambert"
 __author_email__ = "mauricelambert434@gmail.com"
 __maintainer__ = "Maurice Lambert"
@@ -101,7 +105,7 @@ license = "GPL-3.0 License"
 __url__ = "https://github.com/mauricelambert/WebPayloadsEncodings"
 
 copyright = """
-WebPayloadsEncodings  Copyright (C) 2022  Maurice Lambert
+WebPayloadsEncodings  Copyright (C) 2022, 2023  Maurice Lambert
 This program comes with ABSOLUTELY NO WARRANTY.
 This is free software, and you are welcome to redistribute it
 under certain conditions.
@@ -293,7 +297,7 @@ def javascript_char(string: Union[str, bytes]) -> str:
     return (
         "String.fromCharCode("
         + ",".join(str(char) for char in encode(string))
-        + ")"
+        + ")"<
     )
 
 
@@ -307,7 +311,19 @@ def hexa_escaping(string: Union[str, bytes]) -> str:
     >>>
     """
 
-    return r"\x" + r"\x".join(hex(char)[2:] for char in encode(string))
+    return r"\x" + r"\x".join(f"{char:0>2x}" for char in encode(string))
+
+def octal_escaping(string: Union[str, bytes]) -> str:
+
+    r"""
+    This function returns a octal payload to bypass basic filters.
+
+    >>> print(octal_escaping('abc'))
+    \141\142\143
+    >>>
+    """
+
+    return "\\" + "\\".join(f"{char:0>3o}" for char in encode(string))
 
 
 def unicode(string: Union[str, bytes], leading_zeros: int = 4) -> str:
@@ -383,6 +399,10 @@ def payloads_encodings(encoding: str, *payloads: Iterable[str]) -> int:
         "hexa_escape": hexa_escaping,
         "hexadecimal escape": hexa_escaping,
         "hexadecimal_escape": hexa_escaping,
+        "octal escaping": octal_escaping,
+        "octal_escaping": octal_escaping,
+        "octal escape": octal_escaping,
+        "octal_escape": octal_escaping,
         "hexadecimal": hexa_number,
         "hexa": hexa_number,
         "html": html_decimal,
