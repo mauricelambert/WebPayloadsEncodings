@@ -73,7 +73,7 @@ String.fromCharCode(116,104,105,115,32,105,115,32,109,121,32,116,101,115,116)
 'hexa escaping', 'hexadecimal escaping', 'hexa_escaping', 'hexadecimal_escaping', 'hexa escape', 'hexa_escape', 'hexadecimal escape', 'hexadecimal_escape'
     \x74\x68\x69\x73\x20\x69\x73\x20\x6d\x79\x20\x74\x65\x73\x74
 'octal escaping', 'octal_escaping', 'octal escape', 'octal_escape'
-         \164\150\151\163\040\151\163\040\155\171\040\164\145\163\164
+    \164\150\151\163\040\151\163\040\155\171\040\164\145\163\164
 'hexadecimal', 'hexa'
     0x74686973206973206d792074657374
 'html', 'html_decimal', 'html decimal'
@@ -88,8 +88,8 @@ String.fromCharCode(116,104,105,115,32,105,115,32,109,121,32,116,101,115,116)
 
 Tests:
 ~# python3.11 -m doctest -v WebPayloadsEncodings.py
-22 tests in 17 items.
-22 passed and 0 failed.
+23 tests in 18 items.
+23 passed and 0 failed.
 Test passed.
 """
 
@@ -243,7 +243,7 @@ def sql_char(string: Union[str, bytes], delimiter: str = "||") -> str:
 
 
 def ms_sql_char(string: Union[str, bytes]) -> str:
-
+         
     """
     This function returns a MS SQL Server payload to write string without quotes.
 
@@ -297,7 +297,7 @@ def javascript_char(string: Union[str, bytes]) -> str:
     return (
         "String.fromCharCode("
         + ",".join(str(char) for char in encode(string))
-        + ")"<
+        + ")"
     )
 
 
